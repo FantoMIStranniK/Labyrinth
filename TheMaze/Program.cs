@@ -146,6 +146,10 @@ namespace TheMaze
         {
             string input = Console.ReadLine();
 
+            InputLogic(input);
+        }
+        static void InputLogic(string input)
+        {
             int Xadd = 0;
             int Yadd = 0;
 
@@ -198,14 +202,43 @@ namespace TheMaze
         {
             countOfMoves++;
 
-            if (playerX + 1 < height && field[playerX + 1, playerY] != '@') field[playerX + 1, playerY] = ' ';
-            if (playerX - 1 >= 0 && field[playerX - 1, playerY] != '@') field[playerX - 1, playerY] = ' ';
+            DeleteObstaclePositive(1, 0);
+            DeleteObstaclePositive(0, 1);
 
-            if (playerY + 1 < width && field[playerX, playerY + 1] != '@') field[playerX, playerY + 1] = ' ';
-            if (playerY - 1 >= 0 && field[playerX, playerY - 1] != '@') field[playerX, playerY - 1] = ' ';
+            DeleteObstacleNegative(-1, 0);
+            DeleteObstacleNegative(0, -1);
 
             powerLeft--;
         }
+        static void DeleteObstaclePositive(int addX, int addY)
+        {
+            if (addX > 0 ? playerX + addX < height : true && addY > 0 ? playerY + addY < width : true)
+            {
+                if (IsNotExit(addX, addY)) return;
+
+                DeleteCellNearPlayer(addX, addY);
+            }
+            else return;              
+        }
+        static void DeleteObstacleNegative(int takeX, int takeY)
+        {
+            if (takeX < 0 ? playerX + takeX > 0 : true && takeY < 0 ? playerY + takeY > 0 : true)
+            {
+                if (IsNotExit(takeX, takeY)) return;
+
+                DeleteCellNearPlayer(takeX, takeY);
+            }
+            else return;
+        }
+        static bool IsNotExit(int X, int Y)
+        {
+            return field[playerX + X, playerY + Y] is not '@';
+        }
+        static void DeleteCellNearPlayer(int X, int Y)
+        {
+            field[playerX + X, playerY + Y] = ' ';
+        }
+
         static void CheckForPlayerPosition()
         {
             if(playerX == exitY && playerY == exitX)
