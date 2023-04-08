@@ -31,19 +31,23 @@ namespace TheMaze
             {
                 while (!finishedLevel)
                 {
-                    DrawMap();
-
-                    GetInput();
-
-                    DrawMap();
-
-                    CheckForPlayerPosition();
-
-                    Console.Clear();
+                    DoGameStep();
                 }
 
                 ResetLevel();
             }
+        }
+        static void DoGameStep()
+        {
+            DrawMap();
+
+            GetInput();
+
+            DrawMap();
+
+            CheckForPlayerPosition();
+
+            Console.Clear();
         }
         static void Init()
         {
