@@ -23,6 +23,8 @@ namespace TheMaze
         static int countOfMoves = 1;
         static float score = 0;
 
+        static string input = " ";
+
         static void Main(string[] args)
         {
             Init();
@@ -42,6 +44,8 @@ namespace TheMaze
             DrawMap();
 
             GetInput();
+
+            InputLogic();
 
             DrawMap();
 
@@ -148,11 +152,11 @@ namespace TheMaze
         }
         static void GetInput()
         {
-            string input = Console.ReadLine();
+            input = " ";
 
-            InputLogic(input);
+            input = Console.ReadLine();
         }
-        static void InputLogic(string input)
+        static void InputLogic()
         {
             int Xadd = 0;
             int Yadd = 0;
@@ -206,37 +210,30 @@ namespace TheMaze
         {
             countOfMoves++;
 
-            DeleteObstaclePositive(1, 0);
-            DeleteObstaclePositive(0, 1);
-
-            DeleteObstacleNegative(-1, 0);
-            DeleteObstacleNegative(0, -1);
+            TryDeleteObstacles(1, 1);
+            TryDeleteObstacles(-1, -1);
 
             powerLeft--;
         }
-        static void DeleteObstaclePositive(int addX, int addY)
+        static void TryDeleteObstacles(int X, int Y)
         {
-            if (addX > 0 ? playerX + addX < height : true && addY > 0 ? playerY + addY < width : true)
+            if(IsValidPoint(playerX + X, height))
             {
-                if (IsNotExit(addX, addY)) return;
-
-                DeleteCellNearPlayer(addX, addY);
+                if (IsNotExit(X, 0)) DeleteCellNearPlayer(X, 0); 
             }
-            else return;              
-        }
-        static void DeleteObstacleNegative(int takeX, int takeY)
-        {
-            if (takeX < 0 ? playerX + takeX > 0 : true && takeY < 0 ? playerY + takeY > 0 : true)
+
+            if (IsValidPoint(playerY + Y, width))
             {
-                if (IsNotExit(takeX, takeY)) return;
-
-                DeleteCellNearPlayer(takeX, takeY);
+                if (IsNotExit(0, Y)) DeleteCellNearPlayer(0, Y);
             }
-            else return;
         }
         static bool IsNotExit(int X, int Y)
         {
             return field[playerX + X, playerY + Y] is not '@';
+        }
+        static bool IsValidPoint(int NewPoint, int Limit)
+        {
+            return NewPoint >= 0 && NewPoint < Limit; 
         }
         static void DeleteCellNearPlayer(int X, int Y)
         {
